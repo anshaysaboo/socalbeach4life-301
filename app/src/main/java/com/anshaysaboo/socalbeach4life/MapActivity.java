@@ -14,6 +14,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.anshaysaboo.socalbeach4life.Interfaces.ResultHandler;
+import com.anshaysaboo.socalbeach4life.Managers.BeachManager;
+import com.anshaysaboo.socalbeach4life.Objects.Beach;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -21,8 +24,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -47,9 +54,42 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         locationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                addBeachMarkersForLocation(loc);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 9));
             }
         });
+    }
+
+    // Performs network request to fetch nearby beach locations
+    void addBeachMarkersForLocation(LatLng location) {
+        BeachManager.getBeachesNearLocation(location, new ResultHandler<List<Beach>>() {
+            @Override
+            public void onSuccess(List<Beach> data) {
+                addMarkerForBeaches(data);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+
+    // Adds markers for beaches, is in a separate method to run on main thread
+    void addMarkerForBeaches(List<Beach> beaches) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (Beach beach: beaches) {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(beach.getLocation())
+                            .title(beach.getName())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    );
+                }
+            }
+        });
+
     }
 
     // Setup the initial map features
