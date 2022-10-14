@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "970333836081",
+    "project_id": "socalbeach4life",
+    "storage_bucket": "socalbeach4life.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970333836081:android:9662657550f67ea66a1610",
+        "android_client_info": {
+          "package_name": "com.anshaysaboo.socalbeach4life"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "970333836081-bb37f380ni5c85n0ken8pmc0b7gi7rq0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7mWyXCsArUk8XEMFe8UweNmqow4c20hQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970333836081-bb37f380ni5c85n0ken8pmc0b7gi7rq0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
