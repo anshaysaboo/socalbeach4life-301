@@ -36,7 +36,7 @@ public class BeachManager {
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://api.yelp.com/v3/businesses/search").newBuilder();
         urlBuilder.addQueryParameter("term", "beach");
         urlBuilder.addQueryParameter("categories", "beaches");
-        urlBuilder.addQueryParameter("limit", "10");
+        urlBuilder.addQueryParameter("limit", "8");
         urlBuilder.addQueryParameter("latitude", location.latitude + "");
         urlBuilder.addQueryParameter("longitude", location.longitude + "");
         String url = urlBuilder.build().toString();

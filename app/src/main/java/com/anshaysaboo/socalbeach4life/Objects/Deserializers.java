@@ -27,8 +27,13 @@ public class Deserializers {
             JsonArray locationObject = jsonObject.getAsJsonObject("location").getAsJsonArray("display_address");
 
             String address = "";
-            for (JsonElement line: locationObject) {
-                address += line.getAsString();
+            for (int i = 0; i < locationObject.size(); i ++) {
+                JsonElement line = locationObject.get(i);
+                if (i == locationObject.size() - 1) {
+                    address += line.getAsString();
+                } else {
+                    address += line.getAsString() + "\n";
+                }
             }
 
             return new Beach(
