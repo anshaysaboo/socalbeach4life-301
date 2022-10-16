@@ -56,7 +56,10 @@ public class BeachManager {
 
             @Override public void onResponse(Call call, Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                    if (!response.isSuccessful()) {
+                        handler.onFailure(new IOException("Unexpected code " + responseBody.string()));
+                        return;
+                    }
 
                     JsonObject obj = JsonParser.parseString(responseBody.string()).getAsJsonObject();
                     JsonArray beachesJson = obj.get("businesses").getAsJsonArray();
@@ -100,7 +103,10 @@ public class BeachManager {
 
             @Override public void onResponse(Call call, Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                    if (!response.isSuccessful()) {
+                        handler.onFailure(new IOException("Unexpected code " + responseBody.string()));
+                        return;
+                    }
 
                     JsonObject obj = JsonParser.parseString(responseBody.string()).getAsJsonObject();
                     JsonArray parkingJson = obj.get("results").getAsJsonArray();
