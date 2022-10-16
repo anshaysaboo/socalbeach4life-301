@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 public class Beach {

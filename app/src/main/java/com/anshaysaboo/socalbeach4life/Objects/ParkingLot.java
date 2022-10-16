@@ -2,6 +2,8 @@ package com.anshaysaboo.socalbeach4life.Objects;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+
 public class ParkingLot {
     private String name;
     private LatLng location;

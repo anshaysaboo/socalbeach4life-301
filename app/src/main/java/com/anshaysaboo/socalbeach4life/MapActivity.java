@@ -7,14 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.Manifest;
-import android.location.GnssAntennaInfo;
+import android.content.Intent;
 import android.location.Location;
-import android.media.Rating;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.RecoverySystem;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -37,8 +34,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +42,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private FusedLocationProviderClient locationProviderClient;
+    private LatLng userLocation;
 
     private CardView detailCard;
     private TextView nameView;
@@ -61,6 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Map<Beach, List<ParkingLot>> lotCache = new HashMap<>();
 
     private Marker selectedMarker = null;
+    private Beach selectedBeach = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +67,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Setup views
-        detailCard = (CardView) findViewById(R.id.beach_details_card);
+        detailCard = (CardView) findViewById(R.id.route_details_card);
         nameView = (TextView) findViewById(R.id.beach_title);
         imageView = (ImageView) findViewById(R.id.beach_image_view);
         addressView = (TextView) findViewById(R.id.address_text);
@@ -87,6 +84,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
+
+        // Listen for marker selection, can be a parking lot marker or a beach marker
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
@@ -95,16 +94,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     // Marker is for a beach
                     // Show the detail card for the given beach
                     Beach b = markerToBeach.get(marker);
+                    selectedBeach = b;
                     showDetailsForBeach(b, marker);
                     marker.showInfoWindow();
-                    return true;
                 } else {
                     marker.showInfoWindow();
-                    return true;
+                }
+                return true;
+            }
+        });
+
+        // Listen for selection on the parking window, can be a parking lot window or a beach window
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                // Check if the marker is for a parking lot
+                if (markerToLot.containsKey(marker)) {
+                    ParkingLot lot = markerToLot.get(marker);
+                    displayRouteToParkingLot(userLocation, lot, selectedBeach);
                 }
             }
         });
 
+        // Listen for any moves the user/code makes to the camera view of the map
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
@@ -125,6 +137,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         locationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                userLocation = loc;
                 addBeachMarkersForLocation(loc);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 9));
             }
@@ -176,6 +189,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     void showParkingLotsForBeach(Beach beach) {
         if (lotCache.containsKey(beach)) {
             addMarkersForParkingLots(lotCache.get(beach));
+            return;
         }
         BeachManager.getParkingLotsNearLocation(beach.getLocation(), new ResultHandler<List<ParkingLot>>() {
             @Override
@@ -289,5 +303,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         });
+    }
+
+    // Displays the route display screen with the given parameters
+    void displayRouteToParkingLot(LatLng currentLocation, ParkingLot lot, Beach beach) {
+        Intent intent = new Intent(getBaseContext(), RouteActivity.class);
+        intent.putExtra("destination_name", lot.getName() + " at " + beach.getName());
+        intent.putExtra("destination_location", lot.getLocation());
+        intent.putExtra("origin_location", currentLocation);
+        startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package com.anshaysaboo.socalbeach4life.Objects;
 
+import com.anshaysaboo.socalbeach4life.Managers.RouteManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -9,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class Deserializers {
 
@@ -62,6 +64,27 @@ public class Deserializers {
             return new ParkingLot(
                     jsonObject.get("name").getAsString(),
                     loc
+            );
+        }
+    }
+
+    public static class RouteDeserializer implements JsonDeserializer<Route> {
+        @Override
+        public Route deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            // TODO: Handle possible exceptions with different route types
+            String polylineString = json.getAsJsonObject().getAsJsonObject("overview_polyline").get("points").getAsString();
+            List<LatLng> steps = RouteManager.decode(polylineString);
+
+            JsonObject legsJson = json.getAsJsonObject().getAsJsonArray("legs").get(0).getAsJsonObject();
+            JsonObject distanceJson = legsJson.getAsJsonObject("distance");
+            JsonObject durationJson = legsJson.getAsJsonObject("duration");
+
+            return new Route(
+                    durationJson.get("value").getAsInt(),
+                    distanceJson.get("value").getAsInt(),
+                    durationJson.get("text").getAsString(),
+                    distanceJson.get("text").getAsString(),
+                    steps
             );
         }
     }
