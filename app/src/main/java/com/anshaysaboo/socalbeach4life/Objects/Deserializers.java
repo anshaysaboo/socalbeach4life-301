@@ -13,7 +13,6 @@ import java.lang.reflect.Type;
 public class Deserializers {
 
     public static class BeachDeserializer implements JsonDeserializer<Beach> {
-
         @Override
         public Beach deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
@@ -45,6 +44,24 @@ public class Deserializers {
                 jsonObject.get("image_url").getAsString(),
                 jsonObject.get("id").getAsString(),
                 jsonObject.get("url").getAsString()
+            );
+        }
+    }
+
+    public static class ParkingLotDeserializer implements JsonDeserializer<ParkingLot> {
+        @Override
+        public ParkingLot deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            JsonObject coordinatesObject = jsonObject.getAsJsonObject("geometry").getAsJsonObject("location");
+            LatLng loc = new LatLng(
+                    coordinatesObject.get("lat").getAsDouble(),
+                    coordinatesObject.get("lng").getAsDouble()
+            );
+
+            return new ParkingLot(
+                    jsonObject.get("name").getAsString(),
+                    loc
             );
         }
     }

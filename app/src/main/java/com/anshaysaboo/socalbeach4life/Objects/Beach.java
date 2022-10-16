@@ -4,6 +4,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 
+import java.util.Objects;
+
 public class Beach {
     private String name;
     private LatLng location;
@@ -55,5 +57,18 @@ public class Beach {
 
     public String getYelpUrl() {
         return yelpUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Beach beach = (Beach) o;
+        return name.equals(beach.name) && location.equals(beach.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, location);
     }
 }

@@ -13,6 +13,7 @@ import android.media.Rating;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.RecoverySystem;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.anshaysaboo.socalbeach4life.Interfaces.ResultHandler;
 import com.anshaysaboo.socalbeach4life.Managers.BeachManager;
 import com.anshaysaboo.socalbeach4life.Objects.Beach;
+import com.anshaysaboo.socalbeach4life.Objects.ParkingLot;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,7 +56,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private TextView reviewCountView;
 
     private List<Beach> beaches;
-    private Map<Marker, Beach> markerToBeach;
+    private Map<Marker, Beach> markerToBeach = new HashMap<>();
+    private Map<Marker, ParkingLot> markerToLot = new HashMap<>();
+    private Map<Beach, List<ParkingLot>> lotCache = new HashMap<>();
 
     private Marker selectedMarker = null;
 
@@ -86,11 +90,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                // Show the detail card for the given beach
-                Beach b = markerToBeach.get(marker);
-                showDetailsForBeach(b, marker);
-                marker.showInfoWindow();
-                return true;
+                // Check if marker is for a beach or parking lot
+                if (markerToBeach.containsKey(marker)) {
+                    // Marker is for a beach
+                    // Show the detail card for the given beach
+                    Beach b = markerToBeach.get(marker);
+                    showDetailsForBeach(b, marker);
+                    marker.showInfoWindow();
+                    return true;
+                } else {
+                    marker.showInfoWindow();
+                    return true;
+                }
             }
         });
 
@@ -120,6 +131,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    // Fills data in and displays the beach information card
     void showDetailsForBeach(Beach beach, Marker marker) {
         nameView.setText(beach.getName());
         reviewCountView.setText("(" + beach.getReviewCount() + ")");
@@ -130,7 +142,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Picasso.get().load(beach.getImageUrl()).into(imageView);
 
         // Zoom camera onto marked beach
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(beach.getLocation(), 13));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(beach.getLocation(), 14));
+
+        // Remove existing markers for parking lots
+        for (Marker m: markerToLot.keySet()) {
+            m.remove();
+        }
+        markerToLot = new HashMap<>();
+
+        // Display the parking lots for the newly selected beach
+        showParkingLotsForBeach(beach);
 
         selectedMarker = null;
         // Delay setting the selected marker to allow the camera time to focus
@@ -152,6 +173,43 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    void showParkingLotsForBeach(Beach beach) {
+        if (lotCache.containsKey(beach)) {
+            addMarkersForParkingLots(lotCache.get(beach));
+        }
+        BeachManager.getParkingLotsNearLocation(beach.getLocation(), new ResultHandler<List<ParkingLot>>() {
+            @Override
+            public void onSuccess(List<ParkingLot> data) {
+                lotCache.put(beach, data);
+                addMarkersForParkingLots(data);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // TODO: Handle this failure
+            }
+        });
+    }
+
+    // Adds markers for beaches, is in a separate method to run on main thread
+    void addMarkersForParkingLots(List<ParkingLot> lots) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (ParkingLot lot: lots) {
+                    Marker m = mMap.addMarker(new MarkerOptions()
+                            .position(lot.getLocation())
+                            .title(lot.getName())
+                            .snippet("Tap for route")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    );
+                    markerToLot.put(m, lot);
+                }
+            }
+        });
+    }
+
+    // Hides the details card view for the given beach
     void hideDetails() {
         TranslateAnimation anim = new TranslateAnimation(0, 0, 0, 500);
         anim.setDuration(500);
@@ -166,18 +224,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         selectedMarker = null;
     }
 
-    // Performs network request to fetch nearby beach locations
+    // Performs request to fetch nearby beach locations
     void addBeachMarkersForLocation(LatLng location) {
         BeachManager.getBeachesNearLocation(location, new ResultHandler<List<Beach>>() {
             @Override
             public void onSuccess(List<Beach> data) {
-                Log.d("ABABABA", "Got beaches");
                 addMarkerForBeaches(data);
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.d("ABABABA", "Failed to get beaches");
+                // TODO: Handle this failure=
                 e.printStackTrace();
             }
         });
@@ -201,7 +258,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         });
-
     }
 
     // Setup the initial map features
@@ -222,11 +278,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                     Manifest.permission.ACCESS_COARSE_LOCATION,false);
                             if (fineLocationGranted != null && fineLocationGranted) {
                                 setupMap();
-                                Log.d("ANSHAY", "PRECISE GRANTED");
                             } else if (coarseLocationGranted != null && coarseLocationGranted) {
-                                Log.d("ANSHAY", "COARSE GRANTED");
+                                // TODO: Handle location permission not granted
                             } else {
-                                Log.d("ANSHAY", "NOT GRANTED");
+                                // TODO: Handle location permission not granted
                             }
                         }
                 );
