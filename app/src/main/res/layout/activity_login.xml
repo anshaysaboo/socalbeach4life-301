@@ -40,24 +40,11 @@
         android:drawablePadding="10dp"
         />
 
-    <TextView
-        android:id="@+id/EmailAlert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="25dp"
-        android:textSize="18dp"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@+id/Email"
-        android:text="Enter a valid email."
-        />
-
     <EditText
         android:id="@+id/Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="25dp"
         android:layout_marginLeft="25dp"
         app:layout_constraintTop_toBottomOf="@+id/Email"
@@ -70,25 +57,12 @@
         android:inputType="textPassword"
         />
 
-    <TextView
-        android:id="@+id/PasswordAlert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="25dp"
-        android:textSize="18dp"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@+id/Password"
-        android:text="Incorrect password!"
-        />
-
     <com.google.android.material.button.MaterialButton
 
         android:id="@+id/LoginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:text="Login"
         android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
