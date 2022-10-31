@@ -7,14 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.anshaysaboo.socalbeach4life.Interfaces.ResultHandler;
 import com.anshaysaboo.socalbeach4life.Managers.AccountManager;
 import com.anshaysaboo.socalbeach4life.Objects.Exceptions;
 import com.anshaysaboo.socalbeach4life.Objects.User;
-
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     Button bLogin, bRegister;
@@ -28,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
         accountManager = new AccountManager(this);
 
-        bLogin = findViewById(R.id.LoginButton);
+        bLogin = findViewById(R.id.button_login);
         bRegister = findViewById(R.id.RegisterButton);
 
         etEmail = findViewById(R.id.Email);
@@ -43,13 +40,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        /*bRegister.setOnClickListener(new View.OnClickListener() { // Uncomment this code after merging with aditya-signup
+        bRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(LoginActivity.this, SignupActivity.class);
+                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
                 LoginActivity.this.startActivity(i);
             }
-        });*/
+        });
     }
 
     private void login() {
