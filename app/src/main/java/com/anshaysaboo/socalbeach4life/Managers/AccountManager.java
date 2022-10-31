@@ -66,7 +66,7 @@ public class AccountManager {
     }
 
     // Attempts to log in the current user. If successful, updates local storage to reflect the
-    // logged in state. Else, throws an InvalidLogin exception.
+    // logged in state. Else, throws an LoginException exception.
     public void loginUser(String email, String password, ResultHandler<User> handler) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         logOut();
