@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
@@ -69,6 +72,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         detailsCard.setVisibility(View.GONE);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -77,6 +81,15 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
+
+                // Add marker at the end point®
+                mMap.addMarker(new MarkerOptions()
+                        .title(destinationName)
+                        .position(destination)
+                );
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, 9));
+
                 calculateRoute(origin, destination, "driving");
             }
         });
@@ -91,7 +104,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         float bearing = result[1];
         int padding = 170;
         if (bearing < -150 || bearing > 150 || (bearing < 30 && bearing > -30)) {
-            padding = 550;
+            padding = 400;
         }
         // Zoom onto the start and end points
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -138,6 +151,20 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 mMap.addPolyline(lineOptions);
             }
         });
+    }
+
+    public void openInGoogleMaps(View view) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("www.google.com")
+                .path("/maps/dir/")
+                .appendQueryParameter("api", "1")
+                .appendQueryParameter("origin", origin.latitude + "," + origin.longitude)
+                .appendQueryParameter("destination", destination.latitude + "," + destination.longitude)
+                .appendQueryParameter("travelmode", "driving");
+        Uri uri = builder.build();
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        this.startActivity(i);
     }
 
 }

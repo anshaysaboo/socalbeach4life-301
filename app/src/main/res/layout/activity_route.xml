@@ -66,7 +66,20 @@
                         android:id="@+id/destination_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
                         android:text="To Parking Lot at Laguna Beach" />
+
+                    <Button
+                        android:id="@+id/open_google_maps_button"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:includeFontPadding="false"
+                        android:insetBottom="4dp"
+                        android:onClick="openInGoogleMaps"
+                        android:text="Open in Google Maps"
+                        android:textColor="@color/primary_orange"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
