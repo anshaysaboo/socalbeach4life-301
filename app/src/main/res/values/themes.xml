@@ -3,6 +3,6 @@
     <style name="Theme.SoCalBeach4Life" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary_orange</item>
 
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/secondary_orange</item>
     </style>
 </resources>
