@@ -164,7 +164,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 .appendQueryParameter("api", "1")
                 .appendQueryParameter("origin", origin.latitude + "," + origin.longitude)
                 .appendQueryParameter("destination", destination.latitude + "," + destination.longitude)
-                .appendQueryParameter("travelmode", "driving");
+                .appendQueryParameter("travelmode", method);
         Uri uri = builder.build();
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         this.startActivity(i);
