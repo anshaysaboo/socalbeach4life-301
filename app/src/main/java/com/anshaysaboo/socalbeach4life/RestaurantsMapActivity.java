@@ -180,10 +180,10 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
 
     // The card was selected, show the current restaurant information
     public void onCardSelected() {
-//        if (selectedRestaurant == null) return;
-//        Intent i = new Intent(MapActivity.this, BeachDetailsActivity.class);
-//        i.putExtra("restaurant", selectedRestaurant);
-//        this.startActivity(i);
+        if (selectedRestaurant == null) return;
+        Intent i = new Intent(RestaurantsMapActivity.this, RestaurantDetailsActivity.class);
+        i.putExtra("restaurant", selectedRestaurant);
+        this.startActivity(i);
     }
 
     private void distanceButtonSelected(int index) {

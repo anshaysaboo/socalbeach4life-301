@@ -76,4 +76,42 @@ public class RestaurantManager {
             }
         });
     }
+
+    // Uses Google Maps API to get the details for a given restaurant
+    public static void getRestaurantDetails(Restaurant restaurant, ResultHandler<Restaurant.Details> handler) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://maps.googleapis.com/maps/api/place/details/json").newBuilder();
+        urlBuilder.addQueryParameter("key", Keys.GOOGLE_MAPS_API_KEY);
+        urlBuilder.addQueryParameter("place_id", restaurant.getId());
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                handler.onFailure(e);
+            }
+
+            @Override public void onResponse(Call call, Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    if (!response.isSuccessful()) {
+                        handler.onFailure(new IOException("Unexpected code " + responseBody.string()));
+                        return;
+                    }
+
+                    JsonObject obj = JsonParser.parseString(responseBody.string()).getAsJsonObject();
+                    JsonObject detailsJson = obj.getAsJsonObject("result");
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    JsonDeserializer<Restaurant.Details> deserializer = new Deserializers.RestaurantDetailsDeserializer();
+                    gsonBuilder.registerTypeAdapter(Restaurant.Details.class, deserializer);
+                    Gson customGson = gsonBuilder.create();
+                    Restaurant.Details res = customGson.fromJson(detailsJson, Restaurant.Details.class);
+
+                    handler.onSuccess(res);
+                }
+            }
+        });
+    }
 }

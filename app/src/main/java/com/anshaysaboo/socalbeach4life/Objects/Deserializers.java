@@ -11,6 +11,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Deserializers {
@@ -118,6 +119,7 @@ public class Deserializers {
 
             return new Restaurant(
                     jsonObject.get("name").getAsString(),
+                    jsonObject.get("place_id").getAsString(),
                     loc,
                     jsonObject.get("rating") != null ? jsonObject.get("rating").getAsDouble() : 0.0,
                     jsonObject.get("user_ratings_total") != null ? jsonObject.get("user_ratings_total").getAsInt() : 0,
@@ -127,5 +129,34 @@ public class Deserializers {
             );
         }
     }
+    public static class RestaurantDetailsDeserializer implements JsonDeserializer<Restaurant.Details> {
+        @Override
+        public Restaurant.Details deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            String description = "";
+            if (jsonObject.getAsJsonObject("editorial_summary") != null) {
+                description = jsonObject.getAsJsonObject("editorial_summary").get("overview").getAsString();
+            }
+
+            List<String> hours = new ArrayList<>();
+            JsonObject hoursObj = jsonObject.getAsJsonObject("current_opening_hours");
+            if (hoursObj != null) {
+                JsonArray hoursArray = hoursObj.getAsJsonArray("weekday_text");
+                if (hoursArray != null) {
+                    for (JsonElement el: hoursArray) {
+                        hours.add(el.getAsString());
+                    }
+                }
+            }
+
+            return new Restaurant.Details(
+                    description,
+                    jsonObject.get("website") != null ? jsonObject.get("website").getAsString() : "",
+                    hours
+            );
+        }
+    }
+
 
 }

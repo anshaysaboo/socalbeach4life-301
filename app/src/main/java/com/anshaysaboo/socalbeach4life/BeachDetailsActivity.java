@@ -50,7 +50,6 @@ public class BeachDetailsActivity extends AppCompatActivity {
         reviewCountTv.setText("(" + beach.getReviewCount() + ")");
         ratingBar.setRating((float) beach.getRating());
 
-        Log.d("ABABABAB", beach.getName() + " " + beach.getYelpUrl());
         if (!beach.getImageUrl().isEmpty())
             Picasso.get().load(beach.getImageUrl()).into(imageView);
 
