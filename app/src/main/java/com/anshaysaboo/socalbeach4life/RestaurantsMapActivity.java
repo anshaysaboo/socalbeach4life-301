@@ -17,6 +17,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,8 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
     private TextView reviewCountView;
     private TextView priceView;
 
+    private List<Button> distanceButtons = new ArrayList<>();
+
     private List<Restaurant> restaurants;
     private Map<Marker, Restaurant> markerToRestaurant = new HashMap<>();
     private Map<Integer, List<Restaurant>> restaurantCache = new HashMap<>();
@@ -66,6 +70,8 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
     private Restaurant selectedRestaurant = null;
 
     private LatLng location;
+
+    int currentRadius = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +86,22 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
         ratingBar = (RatingBar) findViewById(R.id.restaurant_card_rating);
         reviewCountView = (TextView) findViewById(R.id.restaurant_card_review_count_view);
         priceView = (TextView) findViewById(R.id.restaurant_card_pricing_view);
+
+        distanceButtons.add((Button) findViewById(R.id.distance_button_1));
+        distanceButtons.add((Button) findViewById(R.id.distance_button_2));
+        distanceButtons.add((Button) findViewById(R.id.distance_button_3));
+
+        // Add on click listeners for distance buttons
+        for (int i = 0; i < 3; i ++) {
+            Button b = distanceButtons.get(i);
+            int finalI = i;
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    distanceButtonSelected(finalI);
+                }
+            });
+        }
 
         // Initially hide detail card
         detailCard.setVisibility(View.GONE);
@@ -107,7 +129,7 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
 
         // Zoom into the beach location
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
-        addRestaurantMarkersForRadius(3000);
+        distanceButtonSelected(1);
 
         // Listen for marker selection, can be a parking lot marker or a restaurant marker
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -137,7 +159,7 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
                 LatLng current = selectedMarker.getPosition();
                 float[] result = new float[1];
                 Location.distanceBetween(target.latitude, target.longitude, current.latitude, current.longitude, result);
-                if (result[0] > 3000) {
+                if (result[0] > 500) {
                     hideDetails();
                 }
             }
@@ -150,6 +172,21 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
 //        Intent i = new Intent(MapActivity.this, BeachDetailsActivity.class);
 //        i.putExtra("restaurant", selectedRestaurant);
 //        this.startActivity(i);
+    }
+
+    private void distanceButtonSelected(int index) {
+        // Deselect all distance buttons
+        for (Button b: distanceButtons) {
+            b.setBackgroundColor(getColor(R.color.primary_orange));
+            b.setTextColor(getColor(R.color.white));
+        }
+        // Select current distance button
+        distanceButtons.get(index).setBackgroundColor(getColor(R.color.purple_500));
+        distanceButtons.get(index).setTextColor(getColor(R.color.purple_500));
+        currentRadius = (index + 1) * 1000;
+
+        addRestaurantMarkersForRadius(currentRadius);
+        drawCircle(currentRadius);
     }
 
     // Fills data in and displays the restaurant information card
@@ -203,10 +240,23 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
 
     // Performs request to fetch nearby restaurant locations
     void addRestaurantMarkersForRadius(int radius) {
-        RestaurantManager.getRestaurantsNearLocation(location, 1000, new ResultHandler<List<Restaurant>>() {
+        // Remove all current markers
+        for (Marker m: markerToRestaurant.keySet()) {
+            m.remove();
+        }
+        markerToRestaurant = new HashMap<>();
+
+        // Check the cache if we already loaded these restaurants
+        if (restaurantCache.containsKey(radius)) {
+            addMarkerForRestaurants(radius, restaurantCache.get(radius));
+            return;
+        }
+
+        RestaurantManager.getRestaurantsNearLocation(location, radius, new ResultHandler<List<Restaurant>>() {
             @Override
             public void onSuccess(List<Restaurant> data) {
                 addMarkerForRestaurants(radius, data);
+                restaurantCache.put(radius, data);
             }
 
             @Override

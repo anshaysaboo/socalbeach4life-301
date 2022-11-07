@@ -63,7 +63,7 @@ public class RestaurantManager {
 
                     ArrayList<Restaurant> restaurants = new ArrayList<>();
 
-                    for (int i = 0; i < Math.min(restaurantsJson.size(), 15); i ++) {
+                    for (int i = 0; i < Math.min(restaurantsJson.size(), 50); i ++) {
                         JsonObject resObj = restaurantsJson.get(i).getAsJsonObject();
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         JsonDeserializer<Restaurant> deserializer = new Deserializers.RestaurantDeserializer();
