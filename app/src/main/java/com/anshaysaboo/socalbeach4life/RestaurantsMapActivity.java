@@ -119,7 +119,7 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        location = new LatLng(33.542242, -117.784785);
+        location = getIntent().getParcelableExtra("location");
     }
 
     @SuppressLint("MissingPermission")
@@ -144,6 +144,18 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
                     marker.showInfoWindow();
                 }
                 return true;
+            }
+        });
+
+        // Listen for info window click for routing
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                if (markerToRestaurant.containsKey(marker)) {
+                    // Marker is for a restaurant
+                    Restaurant r = markerToRestaurant.get(marker);
+                    displayRouteToRestaurant(r);
+                }
             }
         });
 
@@ -279,6 +291,7 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
                     Marker m = mMap.addMarker(new MarkerOptions()
                             .position(res.getLocation())
                             .title(res.getName())
+                            .snippet("Tap for route")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                     );
                     markerToRestaurant.put(m, res);
@@ -305,11 +318,12 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
     }
 
     // Displays the route display screen with the given parameters
-    void displayRouteToParkingLot(LatLng currentLocation, ParkingLot lot, Restaurant restaurant) {
+    void displayRouteToRestaurant(Restaurant restaurant) {
         Intent intent = new Intent(getBaseContext(), RouteActivity.class);
-        intent.putExtra("destination_name", lot.getName() + " at " + restaurant.getName());
-        intent.putExtra("destination_location", lot.getLocation());
-        intent.putExtra("origin_location", currentLocation);
+        intent.putExtra("destination_name", restaurant.getName());
+        intent.putExtra("destination_location", restaurant.getLocation());
+        intent.putExtra("origin_location", location);
+        intent.putExtra("method", "walking");
         startActivity(intent);
     }
 }

@@ -330,6 +330,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         intent.putExtra("destination_name", lot.getName() + " at " + beach.getName());
         intent.putExtra("destination_location", lot.getLocation());
         intent.putExtra("origin_location", currentLocation);
+        intent.putExtra("method", "driving");
         startActivity(intent);
     }
 }

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ public class BeachDetailsActivity extends AppCompatActivity {
     private TextView reviewCountTv;
     private RatingBar ratingBar;
     private ImageView imageView;
+    private Button restaurantsButton;
 
     private Beach beach;
 
@@ -51,5 +54,11 @@ public class BeachDetailsActivity extends AppCompatActivity {
         if (!beach.getImageUrl().isEmpty())
             Picasso.get().load(beach.getImageUrl()).into(imageView);
 
+    }
+
+    public void findRestaurantsSelected(View view) {
+        Intent i = new Intent(BeachDetailsActivity.this, RestaurantsMapActivity.class);
+        i.putExtra("location", beach.getLocation());
+        startActivity(i);
     }
 }

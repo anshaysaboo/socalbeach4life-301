@@ -43,6 +43,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private LatLng origin;
     private LatLng destination;
     private String destinationName;
+    private String method;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         origin = (LatLng) intent.getParcelableExtra("origin_location");
         destination = (LatLng) intent.getParcelableExtra("destination_location");
         destinationName = intent.getStringExtra("destination_name");
+        method = intent.getStringExtra("method");
 
         // Initialize map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -90,7 +92,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, 9));
 
-                calculateRoute(origin, destination, "driving");
+                calculateRoute(origin, destination, method);
             }
         });
 
@@ -137,7 +139,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 // Add information to details card
                 durationView.setText(route.getDurationString());
                 distanceView.setText("(" + route.getDistanceString() + ")");
-                destinationView.setText("To " + destinationName);
+                String methodCap = method.substring(0, 1).toUpperCase() + method.substring(1);
+                destinationView.setText(methodCap + " to " + destinationName);
                 detailsCard.setVisibility(View.VISIBLE);
                 // Adjust camera to display the full route
                 zoomToFitRoute(route.getSteps(), origin, destination);

@@ -56,8 +56,6 @@ public class RestaurantManager {
                         return;
                     }
 
-
-
                     JsonObject obj = JsonParser.parseString(responseBody.string()).getAsJsonObject();
                     JsonArray restaurantsJson = obj.get("results").getAsJsonArray();
 

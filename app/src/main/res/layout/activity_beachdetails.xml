@@ -61,12 +61,14 @@
                             android:textSize="16dp" />
                 </LinearLayout>
 
-                <ImageView
-
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/beach_details_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="342dp"
-                    android:layout_marginTop="20dp" />
+                    android:layout_marginTop="20dp"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+                    android:scaleType="centerCrop"
+                    android:background="#C6C6C6" />
 
                 <Button
                     android:id="@+id/seeDirections"
@@ -85,10 +87,11 @@
                     android:text="See Reviews" />
 
                 <Button
-                    android:id="@+id/Restraunts"
+                    android:id="@+id/find_restaurants_button"
                     android:layout_width="61dp"
                     android:layout_height="55dp"
                     android:drawableLeft="@drawable/ic_baseline_restaurant_menu_24"
+                    android:onClick="findRestaurantsSelected"
                     android:text="" />
 
                 <TextView
