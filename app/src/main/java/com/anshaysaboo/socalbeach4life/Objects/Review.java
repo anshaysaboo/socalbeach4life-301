@@ -21,6 +21,8 @@ public class Review {
         this.beachName = beachName;
     }
 
+    public Review() {}
+
     public String getAuthor() {
         return author;
     }
