@@ -2,12 +2,25 @@ package com.anshaysaboo.socalbeach4life.Managers;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.anshaysaboo.socalbeach4life.Interfaces.ResultHandler;
 import com.anshaysaboo.socalbeach4life.Objects.Beach;
 import com.anshaysaboo.socalbeach4life.Objects.Deserializers;
+import com.anshaysaboo.socalbeach4life.Objects.Exceptions;
 import com.anshaysaboo.socalbeach4life.Objects.Keys;
 import com.anshaysaboo.socalbeach4life.Objects.ParkingLot;
+import com.anshaysaboo.socalbeach4life.Objects.Review;
+import com.anshaysaboo.socalbeach4life.Objects.User;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -128,5 +141,49 @@ public class BeachManager {
             }
         });
     }
+
+    // Uses Firebase to create a new review for a given beach on the backend
+    public static void createReview(Review review, ResultHandler<Review> handler) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("reviews")
+                .add(review)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        handler.onSuccess(review);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        handler.onFailure(new Exceptions.RequestException(e.getMessage()));
+                    }
+                });
+    }
+
+    // Gets all user-published reviews for a given beach
+    public static void getReviewsForBeach(Beach beach, ResultHandler<List<Review>> handler) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("reviews")
+                .whereEqualTo("beachId", beach.getId())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Review> reviews = queryDocumentSnapshots.toObjects(Review.class);
+                        handler.onSuccess(reviews);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        handler.onFailure(new Exceptions.RequestException(e.getMessage()));
+                    }
+                });
+    }
+
+    
 
 }

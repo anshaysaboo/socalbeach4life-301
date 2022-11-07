@@ -61,4 +61,10 @@ public class BeachDetailsActivity extends AppCompatActivity {
         i.putExtra("location", beach.getLocation());
         startActivity(i);
     }
+
+    public void addReviewSelected(View view) {
+        Intent i = new Intent(BeachDetailsActivity.this, ReviewFormActivity.class);
+        i.putExtra("beach", beach);
+        startActivity(i);
+    }
 }

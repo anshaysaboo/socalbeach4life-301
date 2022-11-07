@@ -87,6 +87,13 @@
                     android:text="See Reviews" />
 
                 <Button
+                    android:id="@+id/button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="addReviewSelected"
+                    android:text="Add Review" />
+
+                <Button
                     android:id="@+id/find_restaurants_button"
                     android:layout_width="61dp"
                     android:layout_height="55dp"

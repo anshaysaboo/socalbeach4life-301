@@ -110,6 +110,10 @@ public class AccountManager {
         editor.apply();
     }
 
+    public String getUserName() {
+        return pref.getString("user_name", "");
+    }
+
     // Sets the local state of the app to logged out
     public void logOut() {
         SharedPreferences.Editor editor = pref.edit();
