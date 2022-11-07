@@ -50,7 +50,8 @@
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="Close"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textSize="16dp" />
 
                 <Button
                     android:id="@+id/distance_button_2"
@@ -64,7 +65,8 @@
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="Medium"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textSize="16dp" />
 
                 <Button
                     android:id="@+id/distance_button_3"
@@ -78,7 +80,8 @@
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="Far"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
