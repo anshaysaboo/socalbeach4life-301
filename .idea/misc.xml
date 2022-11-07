@@ -10,6 +10,8 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.316666259765625" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.23777173913043478" />
+        <entry key="app/src/main/res/layout/activity_restaurantdetails.xml" value="0.2717391304347826" />
+        <entry key="app/src/main/res/layout/activity_restaurants_map.xml" value="0.2717391304347826" />
         <entry key="app/src/main/res/layout/activity_route.xml" value="0.36193450927734383" />
       </map>
     </option>

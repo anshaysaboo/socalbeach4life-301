@@ -8,6 +8,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -85,6 +86,44 @@ public class Deserializers {
                     durationJson.get("text").getAsString(),
                     distanceJson.get("text").getAsString(),
                     steps
+            );
+        }
+    }
+
+    public static class RestaurantDeserializer implements JsonDeserializer<Restaurant> {
+        @Override
+        public Restaurant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            JsonObject coordinatesObject = jsonObject.getAsJsonObject("geometry").getAsJsonObject("location");
+            LatLng loc = new LatLng(
+                    coordinatesObject.get("lat").getAsDouble(),
+                    coordinatesObject.get("lng").getAsDouble()
+            );
+
+            // TODO: Handle very possible crash here
+            JsonArray photoArray = jsonObject.getAsJsonArray("photos");
+            String photoRef = null;
+            if (photoArray != null && photoArray.size() > 0) {
+                JsonElement photoJson = photoArray.get(0);
+                photoRef = photoJson.getAsJsonObject().get("photo_reference").getAsString();
+            }
+
+            int priceLevel = -1;
+            if (jsonObject.get("price_level") != null) {
+                priceLevel = jsonObject.get("price_level").getAsInt();
+            }
+
+            String address = jsonObject.get("vicinity").getAsString().replace(", ", "\n");
+
+            return new Restaurant(
+                    jsonObject.get("name").getAsString(),
+                    loc,
+                    jsonObject.get("rating") != null ? jsonObject.get("rating").getAsDouble() : 0.0,
+                    jsonObject.get("user_ratings_total") != null ? jsonObject.get("user_ratings_total").getAsInt() : 0,
+                    address,
+                    photoRef,
+                    priceLevel
             );
         }
     }
