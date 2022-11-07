@@ -17,7 +17,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="5dp"
 
                     android:gravity="left"
                     android:text="Malibu"
@@ -61,6 +61,37 @@
                             android:textSize="16dp" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/seeReviews"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/ic_baseline_list_24"
+                            android:drawableTint="@color/default_gray"
+                            android:onClick="viewReviewsSelected"
+                            android:text="See Reviews"
+                            android:textColor="@color/default_gray" />
+
+                        <Button
+                            android:id="@+id/button"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/ic_baseline_add_24"
+                            android:drawableTint="@color/default_gray"
+                            android:onClick="addReviewSelected"
+                            android:text="Add Review"
+                            android:textColor="@color/default_gray" />
+                </LinearLayout>
+
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/beach_details_image_view"
                     android:layout_width="match_parent"
@@ -71,68 +102,16 @@
                     android:background="#C6C6C6" />
 
                 <Button
-                    android:id="@+id/seeDirections"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:layout_marginBottom="16dp"
-                    android:drawableLeft="@drawable/ic_baseline_directions_24"
-
-                    android:text="Directions" />
-
-                <Button
-                    android:id="@+id/seeReviews"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="viewReviewsSelected"
-                    android:text="See Reviews" />
-
-                <Button
-                    android:id="@+id/button"
+                    android:id="@+id/find_restaurants_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="addReviewSelected"
-                    android:text="Add Review" />
-
-                <Button
-                    android:id="@+id/find_restaurants_button"
-                    android:layout_width="61dp"
-                    android:layout_height="55dp"
+                    android:layout_marginTop="20dp"
                     android:drawableLeft="@drawable/ic_baseline_restaurant_menu_24"
+                    android:drawableTint="@color/white"
+                    android:letterSpacing="0"
                     android:onClick="findRestaurantsSelected"
-                    android:text="" />
+                    android:text="View Restaurants" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="237dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="413dp"
-                    android:layout_marginBottom="112dp"
-                    android:gravity="center_vertical"
-                    android:text="See Restraunts in Vicinity" />
-
-                <EditText
-                    android:id="@+id/numRestaurants"
-                    android:layout_width="42dp"
-                    android:layout_height="48dp"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="(10)" />
-
-                <RatingBar
-                    android:id="@+id/card_rating_stars"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
-                    android:layout_weight="1"
-                    android:isIndicator="true"
-                    android:max="5"
-                    android:numStars="5"
-                    android:progressTint="@color/primary_orange"
-                    android:rating="2"
-                    android:secondaryProgressTint="@color/primary_orange"
-                    android:stepSize="1" />
         </LinearLayout>
 
 
