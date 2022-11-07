@@ -189,12 +189,10 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
     private void distanceButtonSelected(int index) {
         // Deselect all distance buttons
         for (Button b: distanceButtons) {
-            b.setBackgroundColor(getColor(R.color.primary_orange));
-            b.setTextColor(getColor(R.color.white));
+            b.setTextColor(getColor(R.color.translucent_white));
         }
         // Select current distance button
-        distanceButtons.get(index).setBackgroundColor(getColor(R.color.purple_500));
-        distanceButtons.get(index).setTextColor(getColor(R.color.purple_500));
+        distanceButtons.get(index).setTextColor(getColor(R.color.white));
         currentRadius = (index + 1) * 1000;
 
         addRestaurantMarkersForRadius(currentRadius);
@@ -306,7 +304,7 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
         circle = mMap.addCircle(new CircleOptions()
                 .center(location)
                 .radius(radius * 0.3048)
-                .strokeColor(Color.RED)
+                .strokeColor(getColor(R.color.circle_stroke_color))
         );
     }
 
