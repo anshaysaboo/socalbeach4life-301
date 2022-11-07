@@ -11,6 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.anshaysaboo.socalbeach4life.Interfaces.ResultHandler;
@@ -39,6 +42,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private TextView durationView;
     private TextView distanceView;
     private TextView destinationView;
+    private ProgressBar progressBar;
+    private LinearLayout contentView;
 
     private LatLng origin;
     private LatLng destination;
@@ -57,6 +62,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         durationView = (TextView) findViewById(R.id.duration_text);
         distanceView = (TextView) findViewById(R.id.distance_text);
         destinationView = (TextView) findViewById(R.id.destination_text);
+        progressBar = (ProgressBar) findViewById(R.id.route_progress_bar);
+        contentView = (LinearLayout) findViewById(R.id.route_card_content_view);
 
         // Get route points from intent
         Intent intent = getIntent();
@@ -71,7 +78,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
 
         // Hide route details card to start
-        detailsCard.setVisibility(View.GONE);
+        contentView.setVisibility(View.GONE);
     }
 
     @SuppressLint("MissingPermission")
@@ -144,6 +151,9 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 detailsCard.setVisibility(View.VISIBLE);
                 // Adjust camera to display the full route
                 zoomToFitRoute(route.getSteps(), origin, destination);
+                // Hide the progress bar and show the content
+                contentView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
                 // Draw the route line
                 PolylineOptions lineOptions = new PolylineOptions()
                         .color(0xff4A89F3)
