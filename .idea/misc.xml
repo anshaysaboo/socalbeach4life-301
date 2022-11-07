@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.1085" />
         <entry key="app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.1085" />
+        <entry key="app/src/main/res/layout/activity_beachdetails.xml" value="0.2717391304347826" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2767949422200521" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.316666259765625" />

@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_margin="10dp"
+                android:clickable="true"
                 app:cardCornerRadius="4dp"
                 app:contentPadding="15dp">
 

@@ -1,5 +1,8 @@
 package com.anshaysaboo.socalbeach4life.Objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -7,7 +10,7 @@ import com.google.gson.JsonElement;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Beach {
+public class Beach implements Parcelable {
     private String name;
     private LatLng location;
     private double rating;
@@ -27,6 +30,29 @@ public class Beach {
         this.id = id;
         this.yelpUrl = yelpUrl;
     }
+
+    protected Beach(Parcel in) {
+        name = in.readString();
+        location = in.readParcelable(LatLng.class.getClassLoader());
+        rating = in.readDouble();
+        reviewCount = in.readInt();
+        address = in.readString();
+        imageUrl = in.readString();
+        id = in.readString();
+        yelpUrl = in.readString();
+    }
+
+    public static final Creator<Beach> CREATOR = new Creator<Beach>() {
+        @Override
+        public Beach createFromParcel(Parcel in) {
+            return new Beach(in);
+        }
+
+        @Override
+        public Beach[] newArray(int size) {
+            return new Beach[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -71,5 +97,22 @@ public class Beach {
     @Override
     public int hashCode() {
         return Objects.hash(name, location);
+    }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeParcelable(location, 0);
+        parcel.writeDouble(rating);
+        parcel.writeInt(reviewCount);
+        parcel.writeString(address);
+        parcel.writeString(imageUrl);
+        parcel.writeString(id);
+        parcel.writeString(yelpUrl);
     }
 }

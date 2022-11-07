@@ -13,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -77,6 +78,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Initially hide detail card
         detailCard.setVisibility(View.GONE);
+
+        // Set card view onClickListener
+        detailCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onCardSelected();
+            }
+        });
 
         setupPermission();
     }
@@ -144,6 +153,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 9));
             }
         });
+    }
+
+    // The card was selected, show the current beach information
+    public void onCardSelected() {
+        if (selectedBeach == null) return;
+        Intent i = new Intent(MapActivity.this, BeachDetailsActivity.class);
+        i.putExtra("beach", selectedBeach);
+        this.startActivity(i);
     }
 
     // Fills data in and displays the beach information card
