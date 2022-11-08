@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -57,6 +58,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private RatingBar ratingBar;
     private TextView addressView;
     private TextView reviewCountView;
+    private ProgressBar progressBar;
 
     private List<Beach> beaches;
     private Map<Marker, Beach> markerToBeach = new HashMap<>();
@@ -83,6 +85,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         addressView = (TextView) findViewById(R.id.address_text);
         ratingBar = (RatingBar) findViewById(R.id.card_rating_stars);
         reviewCountView = (TextView) findViewById(R.id.review_count_text);
+        progressBar = (ProgressBar) findViewById(R.id.map_progress_bar);
 
         // Initially hide detail card
         detailCard.setVisibility(View.GONE);
@@ -267,6 +270,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     // Performs request to fetch nearby beach locations
     void addBeachMarkersForLocation(LatLng location) {
+        progressBar.setVisibility(View.VISIBLE);
         BeachManager.getBeachesNearLocation(location, new ResultHandler<List<Beach>>() {
             @Override
             public void onSuccess(List<Beach> data) {
@@ -288,6 +292,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                progressBar.setVisibility(View.GONE);
                 for (Beach beach: beaches) {
                     Marker m = mMap.addMarker(new MarkerOptions()
                             .position(beach.getLocation())
@@ -362,5 +367,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 })
                 .setNeutralButton("Close", null);
         builder.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }
