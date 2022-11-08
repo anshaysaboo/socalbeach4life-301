@@ -2,6 +2,7 @@ package com.anshaysaboo.socalbeach4life;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -68,15 +69,16 @@ public class ReviewFormActivity extends AppCompatActivity {
                 reviewTextView.getText().toString(),
                 beach.getId(),
                 recommendOption,
-                ratingBar.getNumStars(),
+                (int) Math.ceil(ratingBar.getRating()),
                 new Date(),
-                beach.getName()
+                beach.getName(),
+                accountManager.getUserEmail()
         );
 
         BeachManager.createReview(review, new ResultHandler<Review>() {
             @Override
             public void onSuccess(Review data) {
-
+                onBackPressed();
             }
 
             @Override

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.anshaysaboo.socalbeach4life.Interfaces.ResultHandler;
 import com.anshaysaboo.socalbeach4life.Objects.Exceptions;
+import com.anshaysaboo.socalbeach4life.Objects.Review;
 import com.anshaysaboo.socalbeach4life.Objects.User;
 import com.anshaysaboo.socalbeach4life.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,6 +18,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.transform.Result;
 
 public class AccountManager {
 
@@ -98,6 +105,33 @@ public class AccountManager {
         });
     }
 
+    // Gets all the reviews that this user has written
+    public void getReviewsForUser(String email, ResultHandler<List<Review>> handler) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("reviews")
+                .whereEqualTo("authorEmail", email)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Review> reviews = new ArrayList<>();
+                        for (DocumentSnapshot documentSnapshot: queryDocumentSnapshots) {
+                            Review r = documentSnapshot.toObject(Review.class);
+                            r.setFirebaseId(documentSnapshot.getId());
+                            reviews.add(r);
+                        }
+                        handler.onSuccess(reviews);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        handler.onFailure(new Exceptions.RequestException(e.getMessage()));
+                    }
+                });
+    }
+
     // Checks if the local state of the app is logged in/logged out
     public boolean isLoggedIn() {
         return !pref.getString("user_name", "").equals("");
@@ -107,6 +141,7 @@ public class AccountManager {
     private void setLocalLogIn(User user) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("user_name", user.getName());
+        editor.putString("email", user.getEmail());
         editor.apply();
     }
 
@@ -114,10 +149,15 @@ public class AccountManager {
         return pref.getString("user_name", "");
     }
 
+    public String getUserEmail() {
+        return pref.getString("email", "");
+    }
+
     // Sets the local state of the app to logged out
     public void logOut() {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("user_name", "");
+        editor.putString("email", "");
         editor.apply();
     }
 }

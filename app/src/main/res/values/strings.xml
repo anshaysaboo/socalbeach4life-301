@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SoCalBeach4Life</string>
     <string name="preference_file_key">shared_prefs</string>
+    <string name="tag_key">TAG_KEY</string>
 </resources>

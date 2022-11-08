@@ -50,7 +50,7 @@ public class ViewReviewsActivity extends AppCompatActivity {
                 if (data.isEmpty()) {
                     noReviewsView.setVisibility(View.VISIBLE);
                 }
-                recyclerView.setAdapter(new ReviewAdapter(data));
+                recyclerView.setAdapter(new ReviewAdapter(data, false));
             }
 
             @Override

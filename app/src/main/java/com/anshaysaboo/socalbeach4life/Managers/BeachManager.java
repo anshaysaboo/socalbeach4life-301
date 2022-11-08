@@ -28,6 +28,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.protobuf.NullValue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -172,8 +173,34 @@ public class BeachManager {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<Review> reviews = queryDocumentSnapshots.toObjects(Review.class);
+                        List<Review> reviews = new ArrayList<>();
+                        for (DocumentSnapshot documentSnapshot: queryDocumentSnapshots) {
+                            Review r = documentSnapshot.toObject(Review.class);
+                            r.setFirebaseId(documentSnapshot.getId());
+                            reviews.add(r);
+                        }
                         handler.onSuccess(reviews);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        handler.onFailure(new Exceptions.RequestException(e.getMessage()));
+                    }
+                });
+    }
+
+    // Deletes the given user-written review
+    public static void deleteReview(Review review, ResultHandler<Review> handler) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("reviews")
+                .document(review.getFirebaseId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        handler.onSuccess(review);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

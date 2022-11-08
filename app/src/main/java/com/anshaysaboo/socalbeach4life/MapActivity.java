@@ -3,17 +3,21 @@ package com.anshaysaboo.socalbeach4life;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.Manifest;
+import android.accounts.Account;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -21,6 +25,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.anshaysaboo.socalbeach4life.Interfaces.ResultHandler;
+import com.anshaysaboo.socalbeach4life.Managers.AccountManager;
 import com.anshaysaboo.socalbeach4life.Managers.BeachManager;
 import com.anshaysaboo.socalbeach4life.Objects.Beach;
 import com.anshaysaboo.socalbeach4life.Objects.ParkingLot;
@@ -61,12 +66,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Marker selectedMarker = null;
     private Beach selectedBeach = null;
 
+    private AccountManager accountManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        accountManager = new AccountManager(this);
 
         // Setup views
         detailCard = (CardView) findViewById(R.id.route_details_card);
@@ -332,5 +340,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         intent.putExtra("origin_location", currentLocation);
         intent.putExtra("method", "driving");
         startActivity(intent);
+    }
+
+    // Displays the menu dialog
+    public void menuButtonClicked(View view) {
+        String[] items = new String[] {"View My Reviews", "Log Out"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Options")
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (i == 0) {
+                            // View my reviews was selected
+                            startActivity(new Intent(MapActivity.this, UserReviewsActivity.class));
+                        } else {
+                            // Log out was selected
+                            accountManager.logOut();
+                            startActivity(new Intent(MapActivity.this, MainActivity.class));
+                        }
+                    }
+                })
+                .setNeutralButton("Close", null);
+        builder.show();
     }
 }

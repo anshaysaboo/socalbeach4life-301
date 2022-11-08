@@ -24,6 +24,7 @@
                     android:id="@+id/review_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:text="Anshay Saboo"
@@ -67,6 +68,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="TextView" />
+
+            <Button
+                android:id="@+id/delete_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:drawableLeft="@drawable/ic_baseline_delete_24"
+                android:drawableTint="#D32121"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Button" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

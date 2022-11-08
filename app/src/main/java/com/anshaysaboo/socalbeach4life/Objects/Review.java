@@ -10,8 +10,11 @@ public class Review {
     private int rating;
     private Date date;
     private String beachName;
+    private String authorEmail;
 
-    public Review(String author, String body, String beachId, String wouldRecommend, int rating, Date date, String beachName) {
+    private String firebaseId;
+
+    public Review(String author, String body, String beachId, String wouldRecommend, int rating, Date date, String beachName, String authorEmail) {
         this.author = author;
         this.body = body;
         this.beachId = beachId;
@@ -19,6 +22,7 @@ public class Review {
         this.rating = rating;
         this.date = date;
         this.beachName = beachName;
+        this.authorEmail = authorEmail;
     }
 
     public Review() {}
@@ -49,5 +53,17 @@ public class Review {
 
     public String getBeachName() {
         return beachName;
+    }
+
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
+    }
+
+    public String getAuthorEmail() {
+        return authorEmail;
     }
 }

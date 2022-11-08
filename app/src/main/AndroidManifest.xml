@@ -19,6 +19,9 @@
         android:theme="@style/Theme.SoCalBeach4Life"
         tools:targetApi="31">
         <activity
+            android:name=".UserReviewsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ViewReviewsActivity"
             android:exported="false" />
         <activity
