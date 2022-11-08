@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.anshaysaboo.socalbeach4life.Interfaces.ResultHandler;
 import com.anshaysaboo.socalbeach4life.Managers.BeachManager;
@@ -285,6 +286,10 @@ public class RestaurantsMapActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void run() {
                 drawCircle(radius);
+                if (restaurants.size() == 0) {
+                    Toast.makeText(RestaurantsMapActivity.this, "There are no restaurants within the given distance.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 for (Restaurant res: restaurants) {
                     Marker m = mMap.addMarker(new MarkerOptions()
                             .position(res.getLocation())
