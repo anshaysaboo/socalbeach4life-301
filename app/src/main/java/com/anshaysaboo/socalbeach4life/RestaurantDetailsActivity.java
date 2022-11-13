@@ -84,9 +84,10 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     public void showHoursClicked(View view) {
         if (details == null) return;
         // display hours dialog
+        String hoursString = details.getHours().size() > 0 ? String.join("\n\n", details.getHours()) : "No hours provided by owner.";
         new AlertDialog.Builder(this)
                 .setTitle("Hours")
-                .setMessage(String.join("\n\n", details.getHours()))
+                .setMessage(hoursString)
                 .setIcon(R.drawable.ic_baseline_access_time_24)
                 .setPositiveButton("Done", null)
                 .show();
