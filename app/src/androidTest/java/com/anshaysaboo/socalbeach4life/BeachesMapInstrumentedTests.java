@@ -79,7 +79,7 @@ public class BeachesMapInstrumentedTests {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         UiObject marker = device.findObject(new UiSelector().descriptionContains("Venice Beach"));
         marker.click();
-        Thread.sleep(2000);
+        Thread.sleep(500);
         UiObject card = device.findObject(new UiSelector().textContains("1500 Ocean Front Walk"));
         assertTrue(card.exists());
     }
@@ -90,7 +90,7 @@ public class BeachesMapInstrumentedTests {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         UiObject marker = device.findObject(new UiSelector().descriptionContains("Venice Beach"));
         marker.click();
-        Thread.sleep(2000);
+        Thread.sleep(500);
         UiObject card = device.findObject(new UiSelector().textContains("1500 Ocean Front Walk"));
         card.click();
         intending(hasComponent(BeachDetailsActivity.class.getName()));
