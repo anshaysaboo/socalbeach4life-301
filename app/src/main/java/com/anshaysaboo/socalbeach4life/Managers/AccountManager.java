@@ -33,6 +33,10 @@ public class AccountManager {
         this.pref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
     }
 
+    public AccountManager(SharedPreferences pref) {
+        this.pref = pref;
+    }
+
     // Creates a new user with the given name, email, and password, and returns the created user
     // object. Throws ExistingEmail exception if an account with the given email already exists
     public void registerUser(String name, String email, String password, ResultHandler<User> handler) {
@@ -138,7 +142,7 @@ public class AccountManager {
     }
 
     // Sets the local state of the app to logged in
-    private void setLocalLogIn(User user) {
+    public void setLocalLogIn(User user) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("user_name", user.getName());
         editor.putString("email", user.getEmail());

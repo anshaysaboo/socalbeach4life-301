@@ -29,7 +29,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/Name"
+            android:id="@+id/register_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
@@ -44,7 +44,7 @@
             android:textColorHint="#616161" />
 
         <EditText
-            android:id="@+id/Email"
+            android:id="@+id/register_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
@@ -60,7 +60,7 @@
             android:textColorHint="#616161" />
 
         <EditText
-            android:id="@+id/Password"
+            android:id="@+id/register_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
@@ -76,7 +76,7 @@
             android:textColorHint="#616161" />
 
         <EditText
-            android:id="@+id/PasswordRepeat"
+            android:id="@+id/register_repeat_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
